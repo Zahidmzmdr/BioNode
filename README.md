@@ -1,13 +1,12 @@
 <div align="center">
-
+  
+<img width="70" height="70" alt="bionode-final-logo" src="https://github.com/user-attachments/assets/b765162b-44b0-45bd-8b87-508e917d197b" />
 <h1>BioNode</h1>
 
 <p><strong>AIoT BioCNG Micro-Refinery</strong></p>
 
-<p><em>Water hyacinth in. 200-bar BioCNG out.</em><br>
-<em>Autonomously. At the bus terminal.</em></p>
-
-<p><strong>No pipeline. No import. No chemist.</strong></p>
+<p>Water hyacinth in. 200-bar BioCNG out.<br>
+Autonomously. At the bus terminal.</p>
 
 <p>
   <a href="https://mdtasfiquenoor-dev.github.io/BioNode/">Live demo</a>
@@ -23,59 +22,19 @@
 
 </div>
 
----
 
 ## Overview
 
-BioNode is an AIoT-powered BioCNG micro-refinery designed to convert locally available biomass, especially water hyacinth, into compressed biomethane for transportation use. The concept combines feedstock handling, anaerobic digestion, gas cleaning, methane enrichment, and high-pressure compression into a compact, distributed energy system.
+<em> BioNode is an AIoT-powered BioCNG micro-refinery designed to convert locally available biomass, especially water hyacinth, into compressed biomethane for transportation use. The concept combines feedstock handling, anaerobic digestion, gas cleaning, methane enrichment, and high-pressure compression into a compact, distributed energy system.
 
-The system is intended for local deployment near demand centers, reducing reliance on long-distance fuel supply chains while creating a practical pathway for biomass recovery and clean transport fuel generation.
-
----
+The system is intended for local deployment near demand centers, reducing reliance on long-distance fuel supply chains while creating a practical pathway for biomass recovery and clean transport fuel generation.</em>
 
 ## Architecture
+<img width="1198" height="319" alt="image" src="assets/BioNode_Architecture.png" />
 
-<div align="center">
 
-<svg width="960" height="270" viewBox="0 0 960 270" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">BioNode architecture overview</title>
-  <desc id="desc">Water hyacinth enters the system, feeds the digester, then passes through scrubbing, methane separation, and high-pressure compression to produce 200-bar BioCNG.</desc>
-  <rect width="960" height="270" rx="18" fill="#F3F7F4"/>
-  <rect x="30" y="82" width="140" height="78" rx="16" fill="#DDEFE2" stroke="#2C7A5B" stroke-width="2"/>
-  <text x="100" y="110" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">Water</text>
-  <text x="100" y="136" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">Hyacinth</text>
+<em>The process can be summarized as: biomass feedstock → anaerobic digestion → raw biogas → H₂S scrubbing → CO₂ separation → biomethane → high-pressure compression → 200-bar BioCNG.</em>
 
-  <rect x="215" y="82" width="150" height="78" rx="16" fill="#E8F0F7" stroke="#3C5E79" stroke-width="2"/>
-  <text x="290" y="110" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1A2E3B" font-weight="700">Anaerobic</text>
-  <text x="290" y="136" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1A2E3B" font-weight="700">Digestion</text>
-
-  <rect x="410" y="82" width="150" height="78" rx="16" fill="#F7EBD8" stroke="#B78438" stroke-width="2"/>
-  <text x="485" y="110" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#4C3720" font-weight="700">H₂S</text>
-  <text x="485" y="136" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#4C3720" font-weight="700">Scrubbing</text>
-
-  <rect x="605" y="82" width="170" height="78" rx="16" fill="#E5F0EA" stroke="#2C7A5B" stroke-width="2"/>
-  <text x="690" y="110" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">CO₂</text>
-  <text x="690" y="136" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">Separation</text>
-
-  <rect x="820" y="82" width="110" height="78" rx="16" fill="#D9EDE7" stroke="#2C7A5B" stroke-width="2"/>
-  <text x="875" y="110" text-anchor="middle" font-size="20" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">200 bar</text>
-  <text x="875" y="136" text-anchor="middle" font-size="18" font-family="Arial, Helvetica, sans-serif" fill="#1B3A2F" font-weight="700">BioCNG</text>
-
-  <path d="M170 121H215" stroke="#2C7A5B" stroke-width="4" stroke-linecap="round"/>
-  <path d="M365 121H410" stroke="#2C7A5B" stroke-width="4" stroke-linecap="round"/>
-  <path d="M560 121H605" stroke="#2C7A5B" stroke-width="4" stroke-linecap="round"/>
-  <path d="M775 121H820" stroke="#2C7A5B" stroke-width="4" stroke-linecap="round"/>
-
-  <path d="M270 160V200H690V160" stroke="#3C5E79" stroke-width="3" stroke-dasharray="6 8" fill="none"/>
-  <rect x="628" y="180" width="136" height="46" rx="12" fill="#FFFFFF" stroke="#3C5E79" stroke-width="2"/>
-  <text x="696" y="209" text-anchor="middle" font-size="16" font-family="Arial, Helvetica, sans-serif" fill="#1A2E3B" font-weight="700">AIoT control</text>
-</svg>
-
-</div>
-
-The process can be summarized as: biomass feedstock → anaerobic digestion → raw biogas → H₂S scrubbing → CO₂ separation → biomethane → high-pressure compression → 200-bar BioCNG.
-
----
 
 ## Problem statement
 
@@ -102,7 +61,6 @@ BioNode is designed as a compact, site-ready fuel system with the following stag
 
 The configuration is intended to operate close to the point of demand, reducing transport losses and avoiding reliance on long-distance fuel supply chains.
 
----
 
 ## Why BioNode matters
 
@@ -126,7 +84,6 @@ BioNode aims to address several linked needs in one integrated platform:
 - Renewable-powered auxiliary systems
 - Local energy-service opportunities
 
----
 
 ## AIoT control system
 
@@ -145,7 +102,7 @@ Sensors → Edge controller → AI-based monitoring → Process optimization →
 - Electrical load
 - Digester conditions
 
----
+
 
 ## Current development status
 
@@ -156,7 +113,6 @@ Sensors → Edge controller → AI-based monitoring → Process optimization →
 - Dholakhali fabrication order: placed
 - Phase 1 CAPEX: BDT 1,46,500 (~$1,330 USD)
 
----
 
 ## Expected impact
 
@@ -166,7 +122,7 @@ Sensors → Edge controller → AI-based monitoring → Process optimization →
 - 30%+ of Bangladesh's waterways affected by hyacinth
 - Potential for distributed biomass-to-fuel infrastructure at scale
 
----
+
 
 ## Market opportunity
 
@@ -177,7 +133,7 @@ Sensors → Edge controller → AI-based monitoring → Process optimization →
 
 This is a practical infrastructure opportunity that combines waste recovery, transport fuel supply, and local energy service delivery.
 
----
+
 
 ## Roadmap
 
@@ -188,7 +144,6 @@ This is a practical infrastructure opportunity that combines waste recovery, tra
 - 2030: 500 units — Carbon platform and integrated service model
 - 2036: BioCNG infrastructure for 1 billion people
 
----
 
 ## Vision
 
@@ -196,13 +151,11 @@ BioNode is not a stand-alone biogas plant. It is an intelligent, distributed bio
 
 <div align="center">
 
-### Clear the waterways.
-### Produce the fuel.
-### Power the future.
+### Clear the waterways · Produce the fuel · Power the future.
 
 </div>
 
----
+
 
 <div align="center">
 
@@ -217,14 +170,13 @@ BioNode is not a stand-alone biogas plant. It is an intelligent, distributed bio
   </tr>
 </table>
 
-<p><em>BioNode · Built in Bangladesh. Fuel for the world.</em></p>
+<p><em>BioNode · Built in Bangladesh · Fuel for the world.</em></p>
 
 </div>
-
----
 
 <div align="center">
 
-<p><strong>BEAR Summit 2026</strong> · <em>Built for local energy, local mobility, and a cleaner operating model.</em></p>
+<p><em><strong>BEAR Summit 2026</strong> · <em>Built for local energy, local mobility, and a cleaner operating model.</em></p>
 
 </div>
+---
