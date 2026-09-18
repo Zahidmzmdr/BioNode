@@ -9,7 +9,7 @@
 Autonomously. At the bus terminal.</p>
 
 <p>
-  <a href="https://mdtasfiquenoor-dev.github.io/BioNode/">Live demo</a>
+  <a href="https://merry-pudding-49b37d.netlify.app/">Live demo</a>
   ·
   <a href="#overview">Overview</a>
   ·
