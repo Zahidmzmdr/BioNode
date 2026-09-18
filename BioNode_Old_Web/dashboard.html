@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioNode OS — Unit 01 Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g: #00C48C;
+  --dg: #00836A;
+  --lg: #E6F9F4;
+  --am: #F5A623;
+  --rd: #FF5C5C;
+  --bl: #4A9EFF;
+  --bg: #0A0F1A;
+  --bg2: #111827;
+  --bg3: #1A2235;
+  --bg4: #1F2D42;
+  --bdr: #2A3A52;
+  --bdr2: #3A4F6A;
+  --txt: #F0F4FF;
+  --txt2: #8A9BBE;
+  --txt3: #4A5A78;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Consolas', monospace;
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--sans);
+  font-size: 13px;
+  height: 100%;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--bdr);
+  padding: 0 1.5rem;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; color: var(--txt); white-space: nowrap; }
+.logo-g { color: var(--g); }
+.ver { font-size: 10px; color: var(--txt3); font-weight: 400; margin-left: 2px; }
+.unit-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 100px;
+  background: var(--bg3); border: 1px solid var(--bdr2);
+  color: var(--txt2); white-space: nowrap; font-family: var(--mono);
+}
+.sys-ok { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--g); font-weight: 600; white-space: nowrap; }
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--g); animation: pulse 2.2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.8)} }
+.fault-tag {
+  display: none; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; padding: 3px 12px; border-radius: 100px;
+  background: rgba(255,92,92,.15); color: var(--rd); border: 1px solid rgba(255,92,92,.4);
+  animation: fadein .3s ease;
+}
+.spacer { flex: 1; }
+.top-clk { font-family: var(--mono); font-size: 13px; color: var(--txt2); white-space: nowrap; }
+
+/* ── PAGE BODY ── */
+.page { padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.card-hdr {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: .85rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid var(--bdr);
+}
+.card-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .09em; color: var(--txt2);
+}
+.card-hdr .live { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--g); font-weight: 600; }
+
+/* ── PROCESS FLOW ── */
+.flow-row {
+  display: flex; align-items: stretch; gap: 0;
+  overflow-x: auto; padding-bottom: 4px;
+}
+.fstage { display: flex; align-items: center; flex: 1; min-width: 110px; }
+.fbox {
+  flex: 1; background: var(--bg3); border: 1.5px solid var(--bdr);
+  border-radius: var(--radius-sm); padding: .65rem .6rem; text-align: center;
+  transition: border-color .3s, background .3s;
+}
+.fbox.ok  { border-color: var(--g); background: #071a13; }
+.fbox.warn { border-color: var(--am); background: #1a1200; }
+.fbox.alert { border-color: var(--rd); background: #1a0808; animation: alertpulse 1.2s infinite; }
+@keyframes alertpulse { 0%,100%{border-color:var(--rd)} 50%{border-color:#5a0808} }
+.fbox-icon { font-size: 20px; color: var(--txt3); margin-bottom: 4px; display: block; }
+.fbox.ok .fbox-icon { color: var(--g); }
+.fbox.warn .fbox-icon { color: var(--am); }
+.fbox.alert .fbox-icon { color: var(--rd); }
+.fbox-name { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--txt3); margin-bottom: 3px; }
+.fbox-val { font-size: 15px; font-weight: 700; color: var(--txt); font-family: var(--mono); line-height: 1; }
+.fbox-sub { font-size: 9px; color: var(--txt3); margin-top: 2px; }
+.fpbar { height: 3px; background: var(--bdr); border-radius: 2px; margin-top: 7px; overflow: hidden; }
+.fpfill { height: 100%; border-radius: 2px; background: var(--g); transition: width 1.8s ease; }
+.farrow { font-size: 18px; color: var(--bdr2); padding: 0 5px; flex-shrink: 0; margin-bottom: 12px; }
+.farrow.on { color: var(--g); }
+
+/* ── SENSOR METRICS ── */
+.sensors-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.sc {
+  background: var(--bg3); border: 1.5px solid var(--bdr);
+  border-radius: var(--radius-sm); padding: .75rem .8rem;
+  position: relative; overflow: hidden; transition: border-color .3s;
+}
+.sc.warn { border-color: var(--am); }
+.sc.alert { border-color: var(--rd); animation: alertpulse 1.2s infinite; }
+.sc-ind { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--g); transition: background .3s; }
+.sc.warn .sc-ind { background: var(--am); }
+.sc.alert .sc-ind { background: var(--rd); animation: pulse .7s infinite; }
+.sc-lbl { font-size: 10px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; }
+.sc-val { font-size: 22px; font-weight: 700; color: var(--txt); font-family: var(--mono); line-height: 1; }
+.sc-unit { font-size: 10px; color: var(--txt2); margin-top: 2px; }
+.sc-tgt { font-size: 9px; color: var(--txt3); margin-top: 5px; }
+.sc-bar { position: absolute; bottom: 0; left: 0; height: 3px; transition: width 1.4s ease, background .5s; }
+
+/* ── MID ROW ── */
+.mid-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; }
+
+/* ── CHARTS ── */
+.chart-wrap { position: relative; height: 120px; }
+
+/* ── AI LOG ── */
+.log-area {
+  display: flex; flex-direction: column; gap: 4px;
+  min-height: 116px; max-height: 116px; overflow: hidden;
+  font-family: var(--mono); font-size: 11px;
+}
+.ll { display: flex; gap: 6px; align-items: flex-start; animation: fadein .25s ease; }
+@keyframes fadein { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:translateY(0)} }
+.lt { color: var(--txt3); min-width: 48px; flex-shrink: 0; padding-top: 1px; font-size: 10px; }
+.ltag { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; letter-spacing: .04em; }
+.tag-ai  { background: #071a13; color: #3ddc84; border: 1px solid #0d3320; }
+.tag-plc { background: #071022; color: #79b4f7; border: 1px solid #0d2040; }
+.tag-sys { background: var(--bg3); color: var(--txt2); border: 1px solid var(--bdr); }
+.tag-warn { background: #1a1200; color: #d29922; border: 1px solid #3a2a00; }
+.tag-err { background: #1a0808; color: #f85149; border: 1px solid #3a0808; }
+.lm { color: var(--txt); flex: 1; line-height: 1.45; }
+
+/* ── OUTPUT CARDS ── */
+.output-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.oc { background: var(--bg3); border: 1px solid var(--bdr); border-radius: var(--radius-sm); padding: .8rem .9rem; }
+.oc-lbl { font-size: 10px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; }
+.oc-val { font-size: 24px; font-weight: 700; color: var(--txt); font-family: var(--mono); }
+.oc-sub { font-size: 10px; color: var(--txt3); margin-top: 2px; }
+.gtrack { height: 4px; background: var(--bdr); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+.gfill { height: 100%; border-radius: 2px; transition: width 1.5s ease; }
+
+/* ── FPV ROW ── */
+.fpv-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.fpv-item { background: var(--bg3); border: 1px solid var(--bdr); border-radius: var(--radius-sm); padding: .7rem .85rem; }
+.fpv-lbl { font-size: 10px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.fpv-val { font-size: 18px; font-weight: 700; color: var(--g); font-family: var(--mono); }
+.fpv-sub { font-size: 9px; color: var(--txt3); margin-top: 2px; }
+
+/* ── CONTROLS ── */
+.ctrl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.ctrl-section { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.ctrl-label { font-size: 10px; font-weight: 700; color: var(--txt3); text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+
+/* BUTTONS — very clearly distinguishable */
+.btn {
+  font-size: 12px; font-weight: 700; padding: 9px 18px;
+  border-radius: var(--radius-sm); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--sans); letter-spacing: .02em;
+  transition: all .15s ease; white-space: nowrap;
+  border: 2px solid transparent;
+  user-select: none;
+}
+.btn:focus-visible { outline: 2px solid var(--g); outline-offset: 2px; }
+
+/* Primary — Run/Pause */
+.btn-primary {
+  background: var(--g); color: #000;
+  border-color: var(--g);
+  box-shadow: 0 0 16px rgba(0,196,140,.25);
+}
+.btn-primary:hover { background: #00e0a0; border-color: #00e0a0; box-shadow: 0 0 24px rgba(0,196,140,.4); }
+
+/* Warning faults */
+.btn-fault {
+  background: transparent; color: var(--am);
+  border-color: var(--am);
+}
+.btn-fault:hover { background: rgba(245,166,35,.15); }
+
+/* Critical fault */
+.btn-critical {
+  background: transparent; color: var(--rd);
+  border-color: var(--rd);
+}
+.btn-critical:hover { background: rgba(255,92,92,.15); }
+
+.btn i { font-size: 15px; }
+
+.ctrl-hint {
+  font-size: 10px; color: var(--txt3); line-height: 1.6;
+  padding: .65rem .85rem; background: var(--bg3);
+  border-radius: var(--radius-sm); border: 1px solid var(--bdr);
+  max-width: 320px;
+}
+
+/* ── STATUS BAR ── */
+.statusbar {
+  background: var(--bg2); border-top: 1px solid var(--bdr);
+  padding: 0 1.5rem; height: 28px;
+  display: flex; align-items: center; gap: 18px; flex-shrink: 0;
+}
+.sb-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--txt3); }
+.sb-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sensors-grid { grid-template-columns: repeat(3, 1fr); }
+  .mid-row { grid-template-columns: 1fr; }
+  .output-row { grid-template-columns: repeat(2, 1fr); }
+  .fpv-row { grid-template-columns: repeat(2, 1fr); }
+  .fstage { min-width: 90px; }
+}
+@media (max-width: 600px) {
+  .topbar { padding: 0 .85rem; gap: 8px; height: 48px; }
+  .unit-tag { display: none; }
+  .page { padding: .75rem; gap: .85rem; }
+  .sensors-grid { grid-template-columns: repeat(2, 1fr); }
+  .output-row { grid-template-columns: repeat(2, 1fr); }
+  .fpv-row { grid-template-columns: repeat(2, 1fr); }
+  .ctrl-row { flex-direction: column; align-items: flex-start; }
+  .fstage { min-width: 80px; }
+  .sc-val { font-size: 18px; }
+  .oc-val { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">Bio<span class="logo-g">Node</span> <span class="ver">OS v2.4</span></div>
+  <div class="unit-tag">UNIT-01 &bull; GABTOLI TERMINAL &bull; DHAKA</div>
+  <div class="sys-ok"><div class="pulse"></div>OPERATIONAL</div>
+  <div class="fault-tag" id="fault-tag"><i class="ti ti-alert-triangle"></i>&nbsp;FAULT — AI CORRECTING</div>
+  <div class="spacer"></div>
+  <div class="top-clk" id="top-clk">--:--:--</div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page">
+
+  <!-- PROCESS FLOW -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-title">Process Pipeline</span>
+      <div class="live"><div class="pulse"></div>LIVE</div>
+    </div>
+    <div class="flow-row">
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-0">
+          <i class="ti ti-leaf fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">Feedstock</div>
+          <div class="fbox-val" id="fv-0">44 kg</div>
+          <div class="fbox-sub">Water hyacinth</div>
+          <div class="fpbar"><div class="fpfill" id="fp-0" style="width:72%"></div></div>
+        </div>
+      </div>
+      <div class="farrow on" aria-hidden="true">&rarr;</div>
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-1">
+          <i class="ti ti-flask fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">Digester</div>
+          <div class="fbox-val" id="fv-1">pH 7.24</div>
+          <div class="fbox-sub">Anaerobic digestion</div>
+          <div class="fpbar"><div class="fpfill" id="fp-1" style="width:65%"></div></div>
+        </div>
+      </div>
+      <div class="farrow on" aria-hidden="true">&rarr;</div>
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-2">
+          <i class="ti ti-filter fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">H&#x2082;S Scrubber</div>
+          <div class="fbox-val" id="fv-2">99.2%</div>
+          <div class="fbox-sub">Removal efficiency</div>
+          <div class="fpbar"><div class="fpfill" id="fp-2" style="width:88%"></div></div>
+        </div>
+      </div>
+      <div class="farrow on" aria-hidden="true">&rarr;</div>
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-3">
+          <i class="ti ti-circle-dotted fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">CO&#x2082; Membrane</div>
+          <div class="fbox-val" id="fv-3">98.7%</div>
+          <div class="fbox-sub">CO&#x2082; separated</div>
+          <div class="fpbar"><div class="fpfill" id="fp-3" style="width:94%"></div></div>
+        </div>
+      </div>
+      <div class="farrow on" aria-hidden="true">&rarr;</div>
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-4">
+          <i class="ti ti-engine fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">Compressor</div>
+          <div class="fbox-val" id="fv-4">148 bar</div>
+          <div class="fbox-sub">Building to 200 bar</div>
+          <div class="fpbar"><div class="fpfill" id="fp-4" style="width:74%"></div></div>
+        </div>
+      </div>
+      <div class="farrow on" aria-hidden="true">&rarr;</div>
+      <div class="fstage">
+        <div class="fbox ok" id="fbox-5">
+          <i class="ti ti-gas-station fbox-icon" aria-hidden="true"></i>
+          <div class="fbox-name">BioCNG Output</div>
+          <div class="fbox-val" id="fv-5">96.2%</div>
+          <div class="fbox-sub">CH&#x2084; purity</div>
+          <div class="fpbar"><div class="fpfill" id="fp-5" style="width:96%;background:var(--g)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSOR METRICS -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-title">Sensor Array &mdash; Real-Time Readings</span>
+      <div class="live"><div class="pulse"></div>5 CHANNELS ACTIVE</div>
+    </div>
+    <div class="sensors-grid">
+      <div class="sc" id="sc-ph"><div class="sc-ind"></div><div class="sc-lbl">Digester pH</div><div class="sc-val" id="v-ph">7.24</div><div class="sc-unit">pH units</div><div class="sc-tgt">Target range: 6.8 &ndash; 7.4</div><div class="sc-bar" id="b-ph" style="width:72%;background:var(--g)"></div></div>
+      <div class="sc" id="sc-temp"><div class="sc-ind"></div><div class="sc-lbl">Temperature</div><div class="sc-val" id="v-temp">37.4</div><div class="sc-unit">&deg;C</div><div class="sc-tgt">Target range: 35 &ndash; 38&deg;C</div><div class="sc-bar" id="b-temp" style="width:79%;background:var(--g)"></div></div>
+      <div class="sc" id="sc-ch4"><div class="sc-ind"></div><div class="sc-lbl">CH&#x2084; Purity</div><div class="sc-val" id="v-ch4">96.2</div><div class="sc-unit">%</div><div class="sc-tgt">Target: &ge;95%</div><div class="sc-bar" id="b-ch4" style="width:96%;background:var(--g)"></div></div>
+      <div class="sc" id="sc-pres"><div class="sc-ind"></div><div class="sc-lbl">Pressure</div><div class="sc-val" id="v-pres">148</div><div class="sc-unit">bar</div><div class="sc-tgt">Target: 200 bar</div><div class="sc-bar" id="b-pres" style="width:74%;background:var(--bl)"></div></div>
+      <div class="sc" id="sc-h2s"><div class="sc-ind"></div><div class="sc-lbl">H&#x2082;S Level</div><div class="sc-val" id="v-h2s">14</div><div class="sc-unit">ppm</div><div class="sc-tgt">Maximum allowed: 50 ppm</div><div class="sc-bar" id="b-h2s" style="width:28%;background:var(--g)"></div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="mid-row">
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">CH&#x2084; Purity Trend</span></div>
+      <div class="chart-wrap"><canvas id="c-ch4"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">pH Trend</span></div>
+      <div class="chart-wrap"><canvas id="c-ph"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Compression Pressure (bar)</span></div>
+      <div class="chart-wrap"><canvas id="c-pres"></canvas></div>
+    </div>
+  </div>
+
+  <!-- AI LOG -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-title">Edge-AI Decision Log &mdash; PLC Command Stream</span>
+      <div class="live"><div class="pulse"></div>STREAMING</div>
+    </div>
+    <div class="log-area" id="log"></div>
+  </div>
+
+  <!-- OUTPUT ROW -->
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Production Output &mdash; Today</span></div>
+    <div class="output-row">
+      <div class="oc"><div class="oc-lbl">BioCNG Produced</div><div class="oc-val" id="oc-gas">0.0</div><div class="oc-sub">kilograms today</div><div class="gtrack"><div class="gfill" id="g-gas" style="width:0%;background:var(--g)"></div></div></div>
+      <div class="oc"><div class="oc-lbl">Cylinders Filled</div><div class="oc-val" id="oc-cyl">0</div><div class="oc-sub">at 200 bar standard</div><div class="gtrack"><div class="gfill" id="g-cyl" style="width:0%;background:var(--g)"></div></div></div>
+      <div class="oc"><div class="oc-lbl">Feedstock Used</div><div class="oc-val" id="oc-feed">0</div><div class="oc-sub">kg water hyacinth</div><div class="gtrack"><div class="gfill" id="g-feed" style="width:0%;background:var(--am)"></div></div></div>
+      <div class="oc"><div class="oc-lbl">CO&#x2082; Offset</div><div class="oc-val" id="oc-co2">0.0</div><div class="oc-sub">kilograms today</div><div class="gtrack"><div class="gfill" id="g-co2" style="width:0%;background:var(--bl)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- FPV ROW -->
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Aquavoltaic (FPV) Array &mdash; Canal Surface Power</span></div>
+    <div class="fpv-row">
+      <div class="fpv-item"><div class="fpv-lbl">Solar Input</div><div class="fpv-val" id="fpv-kw">2.8 kW</div><div class="fpv-sub">Canal surface array</div></div>
+      <div class="fpv-item"><div class="fpv-lbl">Battery Buffer</div><div class="fpv-val" id="fpv-bat">87%</div><div class="fpv-sub">LiFePO&#x2084; state of charge</div></div>
+      <div class="fpv-item"><div class="fpv-lbl">Efficiency Gain</div><div class="fpv-val">+2.6%</div><div class="fpv-sub">vs land-based panels (water cooling)</div></div>
+      <div class="fpv-item"><div class="fpv-lbl">Load-Shed Protection</div><div class="fpv-val" style="color:#3ddc84">ACTIVE</div><div class="fpv-sub">AI loop protected from grid failure</div></div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="card">
+    <div class="card-hdr"><span class="card-title">Simulation Controls</span></div>
+    <div class="ctrl-row">
+      <div class="ctrl-section">
+        <button class="btn btn-primary" id="btn-run" onclick="toggleSim()">
+          <i class="ti ti-player-play" aria-hidden="true"></i>
+          <span id="btn-lbl">Start Simulation</span>
+        </button>
+      </div>
+      <div class="ctrl-section">
+        <span class="ctrl-label">Inject fault:</span>
+        <button class="btn btn-fault" onclick="inject('ph')">
+          <i class="ti ti-alert-triangle" aria-hidden="true"></i>pH Fault
+        </button>
+        <button class="btn btn-fault" onclick="inject('temp')">
+          <i class="ti ti-thermometer" aria-hidden="true"></i>Temp Spike
+        </button>
+        <button class="btn btn-critical" onclick="inject('h2s')">
+          <i class="ti ti-biohazard" aria-hidden="true"></i>H&#x2082;S Surge
+        </button>
+      </div>
+      <div class="ctrl-hint">
+        Fault buttons demonstrate the Edge-AI detecting a sensor anomaly and issuing PLC correction commands autonomously &mdash; no human intervention required.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="sb-item"><div class="sb-dot" style="background:#3ddc84"></div>PLC Online</div>
+  <div class="sb-item"><div class="sb-dot" style="background:#3ddc84"></div>Edge-AI Active</div>
+  <div class="sb-item"><div class="sb-dot" style="background:#3ddc84"></div>Sensor Bus OK</div>
+  <div class="sb-item"><div class="sb-dot" style="background:#3ddc84"></div>FPV Connected</div>
+  <div class="sb-item"><div class="sb-dot" style="background:#3ddc84"></div>Compressor OK</div>
+  <div class="sb-item" style="margin-left:auto;color:var(--txt3)">BioNode OS v2.4 &nbsp;&middot;&nbsp; UNIT-01 &nbsp;&middot;&nbsp; Gabtoli Terminal, Dhaka</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+var running=false,tick=0,ivl=null,ft=null,ftk=0;
+var N=40;
+var ch4H=Array(N).fill(96.2),phH=Array(N).fill(7.24),presH=Array(N).fill(148);
+var cCH4,cPH,cPres;
+
+var LOGS=[
+  {t:'ai',m:'pH 7.24 — nominal. Digester stability confirmed. No intervention required.'},
+  {t:'plc',m:'Feed pump P-01 active. Loading rate 2.1 kg/min. Hyacinth batch 3 in progress.'},
+  {t:'ai',m:'CH\u2084 at 96.2% — scrubber operating at peak efficiency. Yield above baseline.'},
+  {t:'plc',m:'Compressor stage 2 engaged. Interstage cooler active. Pressure rising steadily.'},
+  {t:'ai',m:'Temp variance \u0394+0.2\u00B0C detected. Cooling loop duty cycle adjusted \u22123%.'},
+  {t:'plc',m:'Solenoid V-04 cycled. Digester headspace pressure equalised. Normal.'},
+  {t:'ai',m:'H\u2082S at 14 ppm. Scrubber iron sponge at 62% saturation. No action needed.'},
+  {t:'plc',m:'Cylinder CYL-07 fill valve open. Target 200 bar. ETA 4 min 18 sec.'},
+  {t:'ai',m:'Organic loading 2.8 kg VSS/m\u00B3\u00B7d. Methane yield tracking above baseline.'},
+  {t:'plc',m:'Heating element HE-02 holding 37.4\u00B0C. PID loop stable within \u00B10.1\u00B0C.'},
+  {t:'ai',m:'CO\u2082 membrane \u0394P nominal at 1.8 bar. Permeate purity 98.7%. OK.'},
+  {t:'sys',m:'Aquavoltaic array: 2.8 kW input. Battery buffer 87%. Load-shed protection active.'},
+  {t:'plc',m:'PLC watchdog confirmed. All 12 actuators responding. Scan cycle: 8 ms.'},
+  {t:'ai',m:'Biogas flow 0.42 m\u00B3/hr. CH\u2084 yield 0.28 m\u00B3/kg VS. On target.'},
+  {t:'sys',m:'FPV panel temp 31.2\u00B0C (water-cooled). Land baseline would be 34.8\u00B0C (+2.6%).'},
+];
+
+var FAULTS={
+  ph:[
+    {t:'warn',m:'ALERT \u2014 pH drop: 7.24 \u2192 6.31. Acidification event detected. Inhibition risk.'},
+    {t:'plc',m:'CORRECTION \u2014 V-08 open. Alkaline buffer injection: 60 ml NaOH solution.'},
+    {t:'ai', m:'pH recovering: 6.31 \u2192 6.64 \u2192 6.88. Monitoring VFA:alkalinity ratio.'},
+    {t:'ai', m:'pH restored to 7.04. Fault cleared. Normal operation resumed. Event logged.'},
+  ],
+  temp:[
+    {t:'warn',m:'ALERT \u2014 temperature spike: 37.4\u00B0C \u2192 41.8\u00B0C. Mesophilic threshold exceeded.'},
+    {t:'plc',m:'CORRECTION \u2014 cooling loop active. Fan duty 85%. HEX-01 flow rate +40%.'},
+    {t:'ai', m:'Temp dropping: 41.8 \u2192 39.6 \u2192 38.2\u00B0C. Recovery in approx. 90 seconds.'},
+    {t:'ai', m:'Temp restored to 37.6\u00B0C. Fault cleared. PID loop re-tuned. Event logged.'},
+  ],
+  h2s:[
+    {t:'err', m:'CRITICAL \u2014 H\u2082S surge: 14 ppm \u2192 184 ppm. Primary scrubber overload.'},
+    {t:'plc',m:'EMERGENCY \u2014 V-12 bypass closed. Secondary filter F-02 brought online.'},
+    {t:'ai', m:'H\u2082S reducing: 184 \u2192 112 \u2192 63 ppm. F-02 absorbing 94% of excess load.'},
+    {t:'ai', m:'H\u2082S normalised to 19 ppm. System safe. Schedule F-01 media replacement.'},
+  ]
+};
+
+function r(a,b,d){return parseFloat((a+Math.random()*(b-a)).toFixed(d===undefined?2:d));}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+function gT(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+
+function addLog(e){
+  var c=document.getElementById('log');
+  var d=document.createElement('div');d.className='ll';
+  d.innerHTML='<span class="lt">'+gT()+'</span><span class="ltag tag-'+e.t+'">'+e.t.toUpperCase()+'</span><span class="lm">'+e.m+'</span>';
+  c.appendChild(d);
+  var ls=c.querySelectorAll('.ll');if(ls.length>6)ls[0].remove();
+}
+
+function setSC(id,val,pct,state){
+  var el=document.getElementById('v-'+id);if(el)el.textContent=val;
+  var bar=document.getElementById('b-'+id);
+  if(bar){
+    bar.style.width=clamp(pct,0,100)+'%';
+    bar.style.background=state==='alert'?'var(--rd)':state==='warn'?'var(--am)':id==='pres'?'var(--bl)':'var(--g)';
+  }
+  var sc=document.getElementById('sc-'+id);
+  if(sc){
+    sc.className='sc '+(state||'');
+    var ind=sc.querySelector('.sc-ind');
+    if(ind)ind.style.background=state==='alert'?'var(--rd)':state==='warn'?'var(--am)':'var(--g)';
+  }
+}
+
+function setFBox(id,val,state){
+  var el=document.getElementById('fv-'+id);if(el)el.textContent=val;
+  var box=document.getElementById('fbox-'+id);if(box)box.className='fbox '+(state||'ok');
+}
+
+function updateCharts(ch4,ph,pres){
+  ch4H.push(ch4);if(ch4H.length>N)ch4H.shift();
+  phH.push(ph);if(phH.length>N)phH.shift();
+  presH.push(pres);if(presH.length>N)presH.shift();
+  cCH4.data.datasets[0].data=[...ch4H];cCH4.update('none');
+  cPH.data.datasets[0].data=[...phH];cPH.update('none');
+  cPres.data.datasets[0].data=[...presH];cPres.update('none');
+}
+
+function makeChart(id,data,min,max,color){
+  var ctx=document.getElementById(id).getContext('2d');
+  return new Chart(ctx,{
+    type:'line',
+    data:{labels:Array(N).fill(''),datasets:[{data:[...data],borderColor:color,backgroundColor:color+'22',tension:.4,borderWidth:2,pointRadius:0,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},
+      plugins:{legend:{display:false},tooltip:{enabled:false}},
+      scales:{
+        x:{display:false},
+        y:{display:true,min,max,
+          ticks:{font:{size:9},color:'#4A5A78',maxTicksLimit:4},
+          grid:{color:'#1A2235'}}
+      }}
+  });
+}
+
+function step(){
+  tick++;
+  var ph,temp,ch4,h2s,pres;
+
+  if(ft){
+    ftk++;
+    var fl=FAULTS[ft];
+    if(ftk===1)addLog(fl[0]);
+    else if(ftk===5)addLog(fl[1]);
+    else if(ftk===10)addLog(fl[2]);
+    else if(ftk===16){addLog(fl[3]);ft=null;ftk=0;document.getElementById('fault-tag').style.display='none';}
+
+    if(ft==='ph'){ph=clamp(6.31+ftk*.075,6.31,7.05);temp=r(36.9,37.7,1);ch4=r(94.0,95.8,1);h2s=r(10,18,0);}
+    else if(ft==='temp'){ph=r(7.0,7.3,2);temp=clamp(41.8-ftk*.265,37.5,41.8);ch4=r(94.5,96.1,1);h2s=r(10,18,0);}
+    else if(ft==='h2s'){ph=r(7.0,7.3,2);temp=r(36.8,37.7,1);ch4=r(95.0,96.4,1);h2s=clamp(184-ftk*13,19,184);}
+    else{ph=r(7.0,7.3,2);temp=r(36.5,37.8,1);ch4=r(95.3,96.7,1);h2s=r(10,18,0);}
+  } else {
+    if(tick%6===0)addLog(LOGS[tick%LOGS.length]);
+    ph=r(6.95,7.38,2);temp=r(36.2,37.9,1);ch4=r(95.2,97.1,1);h2s=r(8,22,0);
+  }
+
+  pres=clamp(148+tick*.52+r(-1.5,1.5,1),0,200);
+  var phW=ph<6.8||ph>7.5,tempW=temp>39||temp<34,h2sA=h2s>120,h2sW=h2s>50;
+
+  setSC('ph',ph.toFixed(2),(ph/8)*100,phW?'warn':'');
+  setSC('temp',temp.toFixed(1),((temp-30)/15)*100,tempW?'warn':'');
+  setSC('ch4',ch4.toFixed(1),ch4,ch4<95?'warn':'');
+  setSC('pres',Math.round(pres),(pres/200)*100,'');
+  setSC('h2s',Math.round(h2s),(h2s/200)*100,h2sA?'alert':h2sW?'warn':'');
+
+  var p1=clamp(58+tick*.30+r(-1.5,1.5),0,99);
+  var p2=clamp(82+tick*.08+r(-1,1),0,99);
+  var p3=clamp(88+tick*.04+r(-.8,.8),0,99);
+  var p4=(pres/200)*100;
+  document.getElementById('fp-0').style.width=clamp(65+tick*.25+r(-1,1),0,99)+'%';
+  document.getElementById('fp-1').style.width=Math.round(p1)+'%';
+  document.getElementById('fp-2').style.width=Math.round(p2)+'%';
+  document.getElementById('fp-3').style.width=Math.round(p3)+'%';
+  document.getElementById('fp-4').style.width=Math.round(p4)+'%';
+  document.getElementById('fp-5').style.width=Math.round(Math.min(ch4,99))+'%';
+
+  setFBox(0,(42+Math.round(tick*.2))+' kg',phW?'warn':'ok');
+  setFBox(1,'pH '+ph.toFixed(2),phW?'warn':'ok');
+  setFBox(2,clamp(99.2-h2s*.005,95,99.5).toFixed(1)+'%',h2sA?'alert':h2sW?'warn':'ok');
+  setFBox(3,(96+r(0,2.5,1)).toFixed(1)+'%','ok');
+  setFBox(4,Math.round(pres)+' bar','ok');
+  setFBox(5,ch4.toFixed(1)+'%',ch4<95?'warn':'ok');
+
+  var gas=parseFloat((tick*.082).toFixed(1));
+  var feed=Math.round(tick*.34);
+  var co2=parseFloat((gas*2.15).toFixed(1));
+  var cyls=Math.floor(gas/5);
+  document.getElementById('oc-gas').textContent=gas;
+  document.getElementById('oc-cyl').textContent=cyls;
+  document.getElementById('oc-feed').textContent=feed;
+  document.getElementById('oc-co2').textContent=co2;
+  document.getElementById('g-gas').style.width=Math.min(100,(gas/50)*100)+'%';
+  document.getElementById('g-cyl').style.width=Math.min(100,(cyls/10)*100)+'%';
+  document.getElementById('g-feed').style.width=Math.min(100,(feed/200)*100)+'%';
+  document.getElementById('g-co2').style.width=Math.min(100,(co2/100)*100)+'%';
+
+  document.getElementById('fpv-kw').textContent=r(2.4,3.3,1)+' kW';
+  document.getElementById('fpv-bat').textContent=Math.min(100,Math.round(87+tick*.04))+'%';
+
+  updateCharts(parseFloat(ch4.toFixed(1)),parseFloat(ph.toFixed(2)),Math.round(pres));
+}
+
+function toggleSim(){
+  running=!running;
+  var lbl=document.getElementById('btn-lbl');
+  var icon=document.getElementById('btn-run').querySelector('i');
+  if(running){
+    addLog({t:'sys',m:'Simulation started. BioNode OS online \u2014 UNIT-01, Gabtoli Terminal, Dhaka.'});
+    lbl.textContent='Pause Simulation';
+    icon.className='ti ti-player-pause';
+    ivl=setInterval(step,900);
+  } else {
+    clearInterval(ivl);
+    lbl.textContent='Resume Simulation';
+    icon.className='ti ti-player-play';
+  }
+}
+
+function inject(type){
+  if(!running)toggleSim();
+  ft=type;ftk=0;
+  document.getElementById('fault-tag').style.display='flex';
+}
+
+setInterval(function(){
+  var e=document.getElementById('top-clk');
+  if(e)e.textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+},1000);
+
+window.addEventListener('load',function(){
+  cCH4=makeChart('c-ch4',ch4H,88,100,'#00C48C');
+  cPH =makeChart('c-ph', phH, 5.5,8.5,'#3ddc84');
+  cPres=makeChart('c-pres',presH,0,210,'#4A9EFF');
+  addLog({t:'sys',m:'BioNode OS v2.4 initialised. UNIT-01 \u2014 Gabtoli Terminal, Dhaka, Bangladesh.'});
+  addLog({t:'ai', m:'Edge-AI inference engine online. 5 sensor channels calibrated and streaming.'});
+  addLog({t:'plc',m:'PLC watchdog active. 12 actuators confirmed responsive. Scan cycle: 8 ms.'});
+  document.getElementById('top-clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+});
+</script>
+</body>
+</html>

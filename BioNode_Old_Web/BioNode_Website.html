@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioNode — AI-Operated BioCNG Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;
+  --bg-soft:#F6F8F7;
+  --ink:#0E1512;
+  --ink-soft:#5B6B63;
+  --line:#E6EAE8;
+  --green:#12A876;
+  --green-deep:#0B7A57;
+  --green-soft:#E7F7F1;
+  --grad1:#12A876;
+  --grad2:#0B8F92;
+  --amber:#E0972E;
+  --shadow: 0 1px 2px rgba(14,21,18,.04), 0 8px 24px rgba(14,21,18,.06);
+  --radius: 16px;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand .dot{width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,var(--grad1),var(--grad2))}
+.navlinks{display:flex;gap:30px;font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+.navlinks a:hover{color:var(--ink)}
+.navcta{display:flex;gap:10px;align-items:center}
+.btn{padding:10px 18px;border-radius:100px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--ink);color:#fff}
+.btn-primary:hover{background:var(--green-deep)}
+.btn-ghost{color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink)}
+@media(max-width:820px){.navlinks{display:none}}
+
+/* HERO */
+.hero{padding:76px 0 0;overflow:hidden}
+.hero-inner{text-align:center;max-width:780px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-soft);color:var(--green-deep);padding:7px 16px;border-radius:100px;font-size:13.5px;font-weight:600;margin-bottom:26px}
+.badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-size:56px;font-weight:800;letter-spacing:-.03em;line-height:1.06;color:var(--ink)}
+h1 .accent{background:linear-gradient(120deg,var(--grad1),var(--grad2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{margin-top:22px;font-size:19px;color:var(--ink-soft);max-width:56ch;margin-left:auto;margin-right:auto;line-height:1.55}
+.hero-actions{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-lg{padding:15px 28px;font-size:15.5px;border-radius:100px}
+.hero-meta{margin-top:18px;font-size:13.5px;color:var(--ink-soft)}
+
+/* PRODUCT SCREENSHOT MOCKUP */
+.product-shot{margin:56px auto 0;max-width:1000px;border-radius:20px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;background:#0d1520}
+.shot-chrome{background:#161f2b;padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #232e3d}
+.shot-dot{width:11px;height:11px;border-radius:50%}
+.shot-url{margin-left:14px;background:#0d1520;color:#7A8A9E;font-size:12.5px;font-family:var(--mono);padding:5px 14px;border-radius:6px;flex:1;max-width:340px}
+.shot-frame{position:relative;background:#0d1520}
+.shot-frame iframe{width:100%;height:560px;border:none;display:block;background:#0d1520}
+.shot-fade{position:absolute;bottom:0;left:0;right:0;height:70px;background:linear-gradient(transparent,#0d1520);pointer-events:none}
+@media(max-width:700px){h1{font-size:38px}.shot-frame iframe{height:400px}}
+
+/* LOGO / TRUST STRIP */
+.trust{padding:40px 0;border-bottom:1px solid var(--line)}
+.trust-inner{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;color:var(--ink-soft);font-size:13.5px;font-weight:600;text-align:center}
+.trust-inner span{padding:8px 0}
+
+/* FEATURE GRID */
+section{padding:88px 0}
+.section-head{text-align:center;max-width:640px;margin:0 auto 52px}
+.kicker{font-size:13.5px;font-weight:700;color:var(--green-deep);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+h2{font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.section-sub{margin-top:14px;font-size:16.5px;color:var(--ink-soft);line-height:1.6}
+
+.feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.feature-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.feature-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--grad1),var(--grad2));display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.feature-card h4{font-size:16.5px;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--ink-soft);line-height:1.55}
+@media(max-width:900px){.feature-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.feature-grid{grid-template-columns:1fr}}
+
+/* PIPELINE STEPS */
+.steps{background:var(--bg-soft);border-radius:24px;padding:48px}
+.step-row{display:grid;grid-template-columns:52px 1fr;gap:20px;padding:22px 0;border-bottom:1px solid var(--line)}
+.step-row:last-child{border-bottom:none}
+.step-num{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.step-body h4{font-size:17px;font-weight:700;margin-bottom:5px}
+.step-body p{font-size:14.5px;color:var(--ink-soft)}
+
+/* METRICS */
+.metrics-band{background:var(--ink);border-radius:24px;padding:52px 40px}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.metric-v{font-size:36px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.metric-v .grad{background:linear-gradient(120deg,#4ADE9E,#38C6C8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.metric-l{font-size:13.5px;color:#9FB0A8;margin-top:8px}
+@media(max-width:760px){.metrics-grid{grid-template-columns:1fr 1fr}}
+
+/* STATUS TIMELINE — "roadmap" style like a product changelog */
+.status-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.status-card{border:1px solid var(--line);border-radius:var(--radius);padding:24px;position:relative}
+.status-pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.pill-done{background:var(--green-soft);color:var(--green-deep)}
+.pill-progress{background:#FFF3E0;color:var(--amber)}
+.pill-next{background:var(--bg-soft);color:var(--ink-soft)}
+.status-card h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.status-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.5}
+@media(max-width:900px){.status-cards{grid-template-columns:1fr}}
+
+/* CTA BANNER */
+.cta-band{background:linear-gradient(135deg,var(--grad1),var(--grad2));border-radius:24px;padding:64px 48px;text-align:center;color:#fff}
+.cta-band h2{color:#fff}
+.cta-band p{color:rgba(255,255,255,.88);margin-top:14px;font-size:16.5px;max-width:50ch;margin-left:auto;margin-right:auto}
+.cta-actions{margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-white{background:#fff;color:var(--green-deep)}
+.btn-white:hover{background:#EAFBF3}
+.btn-outline{border:1.5px solid rgba(255,255,255,.55);color:#fff}
+.btn-outline:hover{background:rgba(255,255,255,.12)}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.contact-form{display:flex;flex-direction:column;gap:14px}
+.contact-form input,.contact-form textarea{border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--sans);font-size:14.5px;background:var(--bg-soft)}
+.contact-form textarea{min-height:110px;resize:vertical}
+.contact-form button{background:var(--ink);color:#fff;border:none;padding:15px;border-radius:100px;font-size:14.5px;font-weight:600;cursor:pointer}
+.contact-form button:hover{background:var(--green-deep)}
+.contact-info{background:var(--bg-soft);border-radius:var(--radius);padding:32px}
+.contact-info h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.contact-info p{font-size:14px;color:var(--ink-soft);margin-bottom:22px;line-height:1.6}
+.todo{background:#FFF3E0;border:1px dashed var(--amber);border-radius:10px;padding:12px 14px;font-size:13px;color:#8A5A17;margin-top:6px}
+@media(max-width:820px){.contact-grid{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding:36px 0;text-align:center}
+footer p{font-size:13.5px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>BioNode</div>
+    <div class="navlinks">
+      <a href="#product">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#impact">Impact</a>
+      <a href="#status">Status</a>
+    </div>
+    <div class="navcta">
+      <a class="btn btn-ghost" href="#contact">Contact</a>
+      <a class="btn btn-primary" href="https://merry-pudding-49b37d.netlify.app/" target="_blank" rel="noopener">Live demo</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:0">
+  <div class="wrap hero-inner">
+    <div class="badge"><span class="pulse"></span>Selected — BEAR Summit 2026</div>
+    <h1>AI-operated fuel infrastructure, <span class="accent">running on waste.</span></h1>
+    <p class="hero-sub">BioNode converts water hyacinth and other overlooked biomass into 200-bar vehicle-grade BioCNG — autonomously, on-site, with an embedded AI doing the job a chemist normally would.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary btn-lg" href="https://merry-pudding-49b37d.netlify.app/" target="_blank" rel="noopener">Open live dashboard</a>
+      <a class="btn btn-ghost btn-lg" href="#contact">Talk to the team</a>
+    </div>
+    <div class="hero-meta">No signup needed — the dashboard below is live and interactive.</div>
+  </div>
+
+  <div class="wrap">
+    <div class="product-shot">
+      <div class="shot-chrome">
+        <span class="shot-dot" style="background:#FF5F57"></span>
+        <span class="shot-dot" style="background:#FEBC2E"></span>
+        <span class="shot-dot" style="background:#28C840"></span>
+        <span class="shot-url">bionode-os.app/unit-01/dashboard</span>
+      </div>
+      <div class="shot-frame">
+        <iframe src="https://merry-pudding-49b37d.netlify.app/" title="BioNode live control dashboard" loading="lazy"></iframe>
+        <div class="shot-fade"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap trust-inner">
+    <span>BEAR Summit 2026</span>
+    <span>Bangladesh Semiconductor Industry Association</span>
+    <span>Silicon River Initiative</span>
+    <span>Presented to the Prime Minister of Bangladesh</span>
+  </div>
+</div>
+
+<section id="product">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Why it's different</div>
+      <h2>Built for a problem no import can solve.</h2>
+      <p class="section-sub">Four things happening at once that no other system in Bangladesh combines.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h4>Autonomous by design</h4>
+        <p>An embedded AI monitors pH, temperature, and gas composition continuously, replacing the trained operator a digester normally needs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌿</div>
+        <h4>Feedstock that costs nothing</h4>
+        <p>Water hyacinth is a free, abundant nuisance weed — BioNode turns the cost of clearing it into the cost of making fuel.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h4>One container, full process</h4>
+        <p>Digestion, scrubbing, separation, and compression all happen on-site — no pipeline, no trucking, no separate facility.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔧</div>
+        <h4>Built entirely in Dhaka</h4>
+        <p>Every component is sourced from Nawabpur and fabricated in Dholaikhal — no import cycle, no Letter-of-Credit delay.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="background:var(--bg-soft)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">How it works</div>
+      <h2>From canal to cylinder in four stages.</h2>
+    </div>
+    <div class="steps" style="background:#fff">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body"><h4>Anaerobic digestion</h4><p>Water hyacinth is broken down by bacterial cultures at 35–38°C, producing raw biogas on site.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-body"><h4>H₂S scrubbing</h4><p>An iron sponge filter strips hydrogen sulfide to under 10ppm before the gas moves downstream.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-body"><h4>CO₂ separation</h4><p>A membrane stage removes CO₂, raising methane purity above 95% — the threshold for vehicle fuel.</p></div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-body"><h4>Compression &amp; dispensing</h4><p>Multi-stage compression brings the gas to 200 bar, filled directly into standard CNG cylinders for sale.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <div class="metrics-band">
+      <div class="metrics-grid">
+        <div><div class="metric-v"><span class="grad">20%</span></div><div class="metric-l">cheaper than imported CNG at the pump</div></div>
+        <div><div class="metric-v"><span class="grad">$880M</span></div><div class="metric-l">addressable annual fuel market in Bangladesh</div></div>
+        <div><div class="metric-v"><span class="grad">$2.8B</span></div><div class="metric-l">global market across comparable geographies by 2032</div></div>
+        <div><div class="metric-v"><span class="grad">Day 1</span></div><div class="metric-l">revenue from first operational day</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="status" style="background:var(--bg-soft)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Current status</div>
+      <h2>What's real today, stated plainly.</h2>
+      <p class="section-sub">We'd rather investors know exactly where we stand than oversell a stage we haven't reached.</p>
+    </div>
+    <div class="status-cards">
+      <div class="status-card">
+        <span class="status-pill pill-done">Complete</span>
+        <h4>System architecture</h4>
+        <p>Full four-stage process design, sensor specification, and AI control strategy are finished and documented.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-pill pill-done">Live</span>
+        <h4>Control dashboard</h4>
+        <p>A working simulation of the monitoring and fault-correction interface is running and demonstrable today — the one embedded above.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-pill pill-progress">In progress</span>
+        <h4>Component sourcing</h4>
+        <p>Sensors and control hardware are being sourced from Nawabpur; the digester vessel is on order for fabrication in Dholaikhal.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-pill pill-next">Not yet built</span>
+        <h4>Physical prototype</h4>
+        <p>No hardware unit has been assembled or tested yet. This is the next stage, and where near-term investment is directed.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-pill pill-done">Recognition</span>
+        <h4>BEAR Summit 2026</h4>
+        <p>Selected through Bangladesh's national BEAR Summit programme; presented on the exhibition floor to the Prime Minister of Bangladesh.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-pill pill-next">Planned</span>
+        <h4>First deployment site</h4>
+        <p>Gabtoli bus terminal, Dhaka — chosen for its direct canal access and daily CNG demand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>We're raising to build the first unit.</h2>
+      <p>If you fund, advise, or operate in clean energy or waste infrastructure, we'd like to talk before the next stage begins.</p>
+      <div class="cta-actions">
+        <a class="btn btn-white btn-lg" href="#contact">Get in touch</a>
+        <a class="btn btn-outline btn-lg" href="https://merry-pudding-49b37d.netlify.app/" target="_blank" rel="noopener">Explore the dashboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Get in touch</div>
+      <h2>Let's talk.</h2>
+    </div>
+    <div class="contact-grid">
+      <form class="contact-form" onsubmit="event.preventDefault(); window.location.href='mailto:REPLACE_WITH_REAL_EMAIL@example.com?subject=BioNode inquiry from '+encodeURIComponent(this.name.value)+'&body='+encodeURIComponent(this.message.value+'\n\nReply to: '+this.email.value);">
+        <input type="text" name="name" placeholder="Your name" required>
+        <input type="email" name="email" placeholder="Email address" required>
+        <textarea name="message" placeholder="What would you like to discuss?" required></textarea>
+        <button type="submit">Send message</button>
+      </form>
+      <div class="contact-info">
+        <h4>Direct contact</h4>
+        <p>Team BioNode — built between Dhaka, Bangladesh and Copenhagen, Denmark.</p>
+        <div class="todo">⚠ TODO: this form currently points to a placeholder email address. Replace <code>REPLACE_WITH_REAL_EMAIL@example.com</code> in the source code with the team's real contact address before sharing this site further.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>BioNode — Built in Bangladesh. Fuel for the world.</p>
+  </div>
+</footer>
+
+</body>
+</html>

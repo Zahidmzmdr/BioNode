@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioNode — Pitch Presentation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
+<style>
+:root{--bg:#ffffff;--bg2:#f5f5f4;--bg3:#f0ede6;--txt:#1a1a1a;--txt2:#6b7280;--txt3:#9ca3af;--bdr:rgba(0,0,0,0.12);--g:#1D9E75;--dg:#085041;--lg:#E1F5EE;--am:#854F0B;--amb:#FAEEDA;--bl:#185FA5;--lbl:#E6F1FB;--dbl:#042C53;--font:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg3);font-family:var(--font);color:var(--txt);padding:1.5rem 1rem;min-height:100vh}
+.deck{max-width:900px;margin:0 auto}
+.topnav{display:flex;gap:6px;align-items:center;margin-bottom:.85rem;flex-wrap:wrap;background:#fff;padding:.75rem 1rem;border-radius:12px;border:0.5px solid var(--bdr)}
+.snav{font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;border:0.5px solid var(--bdr);background:#fff;color:var(--txt2);cursor:pointer;white-space:nowrap}
+.snav:hover{background:var(--bg2)}
+.snav.on{background:var(--g);color:#fff;border-color:var(--g)}
+.ctr{font-size:11px;color:var(--txt2);margin-left:auto;flex-shrink:0}
+.slide{display:none;border:0.5px solid var(--bdr);border-radius:14px;overflow:hidden;background:#fff;animation:slin .22s ease}
+.slide.on{display:block}
+@keyframes slin{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.sh{padding:1.35rem 1.6rem 1.1rem;border-bottom:0.5px solid var(--bdr)}
+.stag{font-size:10px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.stitle{font-size:22px;font-weight:700;color:var(--txt);line-height:1.3}
+.sb{padding:1.15rem 1.6rem 1.4rem;min-height:270px}
+.hl{background:var(--lg);border-left:3px solid var(--g);padding:.75rem 1rem;border-radius:0 7px 7px 0;font-size:13px;color:var(--dg);font-weight:600;margin:.75rem 0;line-height:1.65}
+.hl-a{background:var(--amb);border-left-color:#EF9F27;color:var(--am)}
+.hl-r{background:#FCEBEB;border-left-color:#E24B4A;color:#791F1F}
+.sg{display:grid;gap:9px;margin:.75rem 0}
+.sg2{grid-template-columns:1fr 1fr}
+.sg3{grid-template-columns:1fr 1fr 1fr}
+.sg4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--bg2);border-radius:9px;padding:.85rem 1rem;border:0.5px solid var(--bdr)}
+.card h4{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.card p{font-size:13px;color:var(--txt2);line-height:1.65}
+.stat-v{font-size:26px;font-weight:700;color:var(--txt)}
+.stat-l{font-size:11px;color:var(--txt2);margin-top:3px;line-height:1.4}
+.flow{display:flex;align-items:stretch;gap:0;margin:.75rem 0;flex-wrap:nowrap}
+.fb{flex:1;padding:.75rem .65rem;text-align:center;border:0.5px solid var(--bdr);border-radius:9px;min-width:80px;background:var(--bg2)}
+.fb.accent{border-color:var(--g);background:var(--lg)}
+.fb-t{font-size:12px;font-weight:700;color:var(--txt);margin-bottom:3px}
+.fb-s{font-size:10px;color:var(--txt2)}
+.fa{font-size:20px;color:var(--g);padding:0 5px;display:flex;align-items:center;flex-shrink:0;font-weight:700}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;margin:2px}
+.pg{background:var(--lg);color:var(--dg)}
+.pb{background:var(--lbl);color:var(--dbl)}
+.pa{background:var(--amb);color:var(--am)}
+.ms{display:flex;flex-direction:column;gap:0;margin:.5rem 0}
+.mr{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:0.5px solid var(--bdr)}
+.mr:last-child{border-bottom:none}
+.mdot{width:9px;height:9px;border-radius:50%;background:var(--g);margin-top:4px;flex-shrink:0}
+.mph{font-size:12px;font-weight:700;color:var(--g);min-width:90px;flex-shrink:0}
+.mdt{font-size:13px;color:var(--txt);line-height:1.55}
+.risk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:0.5px solid var(--bdr);font-size:13px}
+.risk:last-child{border-bottom:none}
+.rl{min-width:155px;color:var(--txt2);flex-shrink:0;font-weight:600}
+.rf{color:var(--txt);line-height:1.5}
+.glmap{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:.75rem 0}
+.gmc{background:var(--bg2);border-radius:9px;padding:.7rem .9rem;border:0.5px solid var(--bdr);display:flex;gap:9px;align-items:flex-start}
+.gmc-flag{font-size:20px;flex-shrink:0;margin-top:1px}
+.gmc-text h5{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px}
+.gmc-text p{font-size:12px;color:var(--txt2);line-height:1.5}
+.footnav{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:.85rem;background:#fff;padding:.75rem 1rem;border-radius:12px;border:0.5px solid var(--bdr)}
+.btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:100px;border:0.5px solid var(--bdr);background:#fff;color:var(--txt);cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn:hover{background:var(--bg2)}
+.btn-g{background:var(--g);color:#fff;border-color:var(--g)}
+.btn-g:hover{background:var(--dg)}
+.prog{display:flex;gap:5px;align-items:center}
+.pd{width:22px;height:4px;border-radius:2px;background:#e5e7eb;cursor:pointer;transition:background .2s}
+.pd.on{background:var(--g)}
+.slide-num{font-size:11px;color:var(--txt2)}
+.watermark{text-align:center;margin-top:.75rem;font-size:11px;color:var(--txt3)}
+@media(max-width:580px){.sg3,.sg4{grid-template-columns:1fr 1fr}.sg2{grid-template-columns:1fr}.flow{flex-wrap:wrap}.fb{min-width:60px}.glmap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<div class="topnav" id="tnav"></div>
+
+<div id="slides">
+
+<div class="slide on" id="s0">
+  <div class="sh">
+    <div class="stag">BEAR Summit 2026 &nbsp;&middot;&nbsp; Competition B: Robotics &bull; Biotech &bull; AIoT &nbsp;&middot;&nbsp; Pre-Proposal</div>
+    <div class="stitle">BioNode &mdash; AIoT-Driven BioCNG Micro-Refinery</div>
+  </div>
+  <div class="sb">
+    <div class="hl">Water hyacinth in. Compressed vehicle-grade BioCNG out. Autonomously. At the bus terminal. No pipeline. No import. No chemist required.</div>
+    <div class="sg sg4" style="margin-top:1rem">
+      <div class="card"><div class="stat-v">500K+</div><div class="stat-l">CNG vehicles in Bangladesh</div></div>
+      <div class="card"><div class="stat-v">95%</div><div class="stat-l">Fuel import dependency</div></div>
+      <div class="card"><div class="stat-v">30%+</div><div class="stat-l">Waterways choked by hyacinth</div></div>
+      <div class="card"><div class="stat-v">200 bar</div><div class="stat-l">BioCNG output pressure</div></div>
+    </div>
+    <div style="margin-top:1rem">
+      <span class="pill pg">AIoT</span><span class="pill pg">Edge-AI</span><span class="pill pb">PLC automation</span><span class="pill pb">Biomethane</span><span class="pill pa">Energy-as-a-Service</span><span class="pill pg">Built in Dhaka</span>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s1">
+  <div class="sh"><div class="stag">Problem definition</div><div class="stitle">A double crisis with one overlooked solution</div></div>
+  <div class="sb">
+    <div class="sg sg2">
+      <div class="card"><h4>&#x26FD; The fuel crisis</h4><p>Bangladesh imports 95% of its fuel. Middle East disruptions in 2022&ndash;2024 drained foreign reserves, sent CNG prices surging, and left 500,000+ drivers without affordable fuel overnight. No local alternative exists.</p></div>
+      <div class="card"><h4>&#x1F33F; The weed crisis</h4><p>Water hyacinth covers 30%+ of Bangladesh&rsquo;s navigable waterways. It costs millions to clear annually, blocks river freight and ferry routes, and collapses aquatic ecosystems. Economic value today: zero.</p></div>
+    </div>
+    <div class="hl" style="margin-top:.75rem">Bangladesh is simultaneously dependent on a fuel it cannot afford to import &mdash; and sitting on a free biological feedstock it has never converted to energy. BioNode closes that gap.</div>
+    <div style="margin-top:.75rem"><span class="pill pa">500,000+ vehicles affected</span><span class="pill pa">Forex reserves depleting</span><span class="pill pa">No viable local alternative today</span></div>
+  </div>
+</div>
+
+<div class="slide" id="s2">
+  <div class="sh"><div class="stag">Current solutions</div><div class="stitle">Why everything that exists today fails</div></div>
+  <div class="sb">
+    <div class="sg sg3">
+      <div class="card"><h4>Imported fossil CNG</h4><p>Fully dependent on foreign exchange and global supply chains. One geopolitical shock collapses the system &mdash; as Bangladesh experienced repeatedly since 2022.</p></div>
+      <div class="card"><h4>Rural biogas plants</h4><p>Produce dilute, low-pressure gas for cooking only. Require daily manual supervision. Cannot compress to vehicle-grade pressure. Zero connection to water hyacinth feedstock.</p></div>
+      <div class="card"><h4>Industrial biogas upgrading</h4><p>Exists globally but demands multi-crore CAPEX, specialist operators, and equipment through 3-month Letter of Credit cycles Bangladesh&rsquo;s dollar crisis has made unviable.</p></div>
+    </div>
+    <div class="hl hl-a" style="margin-top:.75rem">No solution in Bangladesh today combines autonomous AI control + on-site gas compression + zero-cost local feedstock in a single deployable container. That is the exact gap BioNode fills.</div>
+  </div>
+</div>
+
+<div class="slide" id="s3">
+  <div class="sh"><div class="stag">Proposed solution</div><div class="stitle">Full-stack fuel production &mdash; one container, four stages</div></div>
+  <div class="sb">
+    <div class="flow">
+      <div class="fb accent"><div class="fb-t">Water hyacinth</div><div class="fb-s">Zero-cost feedstock</div></div>
+      <div class="fa">&rarr;</div>
+      <div class="fb"><div class="fb-t">Anaerobic digestion</div><div class="fb-s">Raw biogas &ge;60% CH&#x2084;</div></div>
+      <div class="fa">&rarr;</div>
+      <div class="fb"><div class="fb-t">H&#x2082;S + CO&#x2082; scrubbing</div><div class="fb-s">&ge;95% pure biomethane</div></div>
+      <div class="fa">&rarr;</div>
+      <div class="fb"><div class="fb-t">Compression</div><div class="fb-s">200 bar vehicle grade</div></div>
+      <div class="fa">&rarr;</div>
+      <div class="fb accent"><div class="fb-t">BioCNG dispensed</div><div class="fb-s">At terminal, daily</div></div>
+    </div>
+    <div class="sg sg3" style="margin-top:.6rem">
+      <div class="card"><h4>Zero supply chain</h4><p>Unit sits at point of consumption. Feedstock from the adjacent canal. No pipeline, no truck, no distribution middleman.</p></div>
+      <div class="card"><h4>Fully local build</h4><p>Vessels: Dholaikhal fabrication. Control hardware: Nawabpur. No imports. No LC delays. Fully locally repairable.</p></div>
+      <div class="card"><h4>Solar-water symbiosis</h4><p>Floating aquavoltaic array on the canal powers the AI control loop. Same water: feedstock + cooling + array host. One site, three functions.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s4">
+  <div class="sh"><div class="stag">Role of AI</div><div class="stitle">The AI is not a feature &mdash; it is the operating condition</div></div>
+  <div class="sb">
+    <div class="hl hl-a">Without the AI, BioNode requires a trained biochemist on-site multiple times per day &mdash; making autonomous terminal deployment, 24/7 operation, and Energy-as-a-Service financially impossible.</div>
+    <div class="sg sg2" style="margin-top:.75rem">
+      <div class="card"><h4>What the AI monitors (real-time)</h4><p>pH level &middot; digester temperature &middot; internal pressure &middot; gas composition (CH&#x2084; %, H&#x2082;S ppm, CO&#x2082; %) &middot; compressor load &middot; battery state from aquavoltaic array</p></div>
+      <div class="card"><h4>What the AI controls via PLC</h4><p>Solenoid valves &middot; heating and cooling elements &middot; feed pump rate &middot; compressor stage activation &middot; load-shifting between solar array, battery, and grid</p></div>
+    </div>
+    <div class="hl" style="margin-top:.6rem">The Edge-AI inference engine runs embedded on local hardware. No cloud, no internet required. Decisions happen in milliseconds, locally. The system keeps running even when connectivity fails.</div>
+  </div>
+</div>
+
+<div class="slide" id="s5">
+  <div class="sh"><div class="stag">Business model</div><div class="stitle">Energy-as-a-Service &mdash; own it, operate it, sell gas daily</div></div>
+  <div class="sb">
+    <div class="flow" style="margin-bottom:.75rem">
+      <div class="fb"><div class="fb-t">Transport union</div><div class="fb-s">Terminal space + security</div></div>
+      <div class="fa">&harr;</div>
+      <div class="fb accent"><div class="fb-t">BioNode (we own it)</div><div class="fb-s">Produce + sell gas</div></div>
+      <div class="fa">&harr;</div>
+      <div class="fb"><div class="fb-t">CNG drivers</div><div class="fb-s">20% below market price</div></div>
+    </div>
+    <div class="sg sg4">
+      <div class="card"><div class="stat-v">20%</div><div class="stat-l">Price discount vs. imported CNG for drivers</div></div>
+      <div class="card"><div class="stat-v">$12M+</div><div class="stat-l">Annual revenue at 10% urban terminal penetration</div></div>
+      <div class="card"><div class="stat-v">EaaS</div><div class="stat-l">Recurring daily revenue &mdash; VC fundable model</div></div>
+      <div class="card"><div class="stat-v">Day 1</div><div class="stat-l">Revenue from first operational day</div></div>
+    </div>
+    <div class="hl" style="margin-top:.75rem">We do not sell units to the government and hope they maintain them. We own, operate, and sell gas daily. Every unit is a recurring revenue node. This is what makes BioNode investable.</div>
+  </div>
+</div>
+
+<div class="slide" id="s6">
+  <div class="sh"><div class="stag">Development plan</div><div class="stitle">8&ndash;10 week MVP to BEAR Summit live demo</div></div>
+  <div class="sb">
+    <div class="ms">
+      <div class="mr"><div class="mdot"></div><div class="mph">Weeks 1&ndash;2</div><div class="mdt">Sensor array and PLC wiring complete. pH, temperature, pressure, and gas composition sensors integrated and bench-tested for signal stability and calibration accuracy.</div></div>
+      <div class="mr"><div class="mdot"></div><div class="mph">Weeks 3&ndash;5</div><div class="mdt">50-litre anaerobic digester fabricated at Dholaikhal. Water hyacinth batch loaded. First biogas output confirmed (target &ge;60% CH&#x2084;). AI control loop trained, automated PLC responses validated.</div></div>
+      <div class="mr"><div class="mdot"></div><div class="mph">Weeks 6&ndash;8</div><div class="mdt">H&#x2082;S scrubbing unit attached. AI dashboard live on screen showing real-time sensor readings and autonomous PLC decisions. 72-hour continuous autonomous run demonstrated.</div></div>
+      <div class="mr"><div class="mdot"></div><div class="mph">Weeks 9&ndash;10</div><div class="mdt">Full system rehearsal for BEAR Summit. Live demo: water hyacinth in &rarr; scrubbed biomethane out &rarr; AI dashboard active. All components stress-tested.</div></div>
+    </div>
+    <div class="hl" style="margin-top:.6rem">All hardware sourced from Nawabpur (control systems) and fabricated at Dholaikhal (mechanical). No imports. No LC delays. Build begins immediately on selection.</div>
+  </div>
+</div>
+
+<div class="slide" id="s7">
+  <div class="sh"><div class="stag">Risks, global relevance &amp; roadmap</div><div class="stitle">Built in Bangladesh. Proven here. Deployed everywhere.</div></div>
+  <div class="sb">
+    <div class="sg sg2">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Risk mitigations</div>
+        <div class="risk"><div class="rl">Feedstock yield variance</div><div class="rf">AI loop trained on variable-composition feedstock. Self-adjusting.</div></div>
+        <div class="risk"><div class="rl">Load-shedding</div><div class="rf">Aquavoltaic array + LiFePO&#x2084; buffer keeps AI loop alive 24/7.</div></div>
+        <div class="risk"><div class="rl">Union friction</div><div class="rf">Revenue-sharing agreements. Incentives aligned from day one.</div></div>
+        <div class="risk"><div class="rl">Pressure vessel regs</div><div class="rf">BSTI/DESA certification initiated at prototype stage.</div></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Global markets</div>
+        <div class="glmap" style="grid-template-columns:1fr">
+          <div class="gmc"><div class="gmc-flag">&#x1F1F2;&#x1F1F2;</div><div class="gmc-text"><h5>Myanmar</h5><p>Water hyacinth on major rivers. CNG fragile. Identical profile.</p></div></div>
+          <div class="gmc"><div class="gmc-flag">&#x1F1FB;&#x1F1F3;</div><div class="gmc-text"><h5>Vietnam</h5><p>Mekong Delta choked with invasive weeds. Rural energy gap.</p></div></div>
+          <div class="gmc"><div class="gmc-flag">&#x1F1F3;&#x1F1EC;</div><div class="gmc-text"><h5>Nigeria</h5><p>Hyacinth blocks waterways. Diesel import costs crippling.</p></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="ms" style="margin-top:.6rem">
+      <div class="mr"><div class="mdot"></div><div class="mph">July 2026</div><div class="mdt">BEAR Summit &mdash; working prototype demonstrated live, Dhaka.</div></div>
+      <div class="mr"><div class="mdot"></div><div class="mph">Jan 2027</div><div class="mdt">3-unit pilot at Dhaka terminal. Daily revenue data. CES 2027 Bangladesh Pavilion.</div></div>
+      <div class="mr" style="border-bottom:none"><div class="mdot"></div><div class="mph">2027&ndash;2028</div><div class="mdt">Series A raise. Regional expansion. Research paper published.</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footnav">
+  <button class="btn" onclick="go(cur-1)"><i class="ti ti-arrow-left"></i> Prev</button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="prog" id="prog"></div>
+    <span class="slide-num" id="snum">1 / 8</span>
+  </div>
+  <button class="btn btn-g" onclick="go(cur+1)">Next <i class="ti ti-arrow-right"></i></button>
+</div>
+<div class="watermark">BioNode &nbsp;&middot;&nbsp; Built in Bangladesh. Fuel for the World. &nbsp;&middot;&nbsp; BEAR Summit 2026</div>
+</div>
+
+<script>
+var cur=0,total=8;
+var labels=['Cover','Problem','Gap','Solution','AI Role','Business','MVP Plan','Global'];
+function buildNav(){
+  var n=document.getElementById('tnav');n.innerHTML='';
+  labels.forEach(function(l,i){var b=document.createElement('button');b.className='snav'+(i===cur?' on':'');b.textContent=l;b.onclick=function(){go(i);};n.appendChild(b);});
+  var c=document.createElement('span');c.className='ctr';c.textContent=(cur+1)+' / '+total;n.appendChild(c);
+  var p=document.getElementById('prog');p.innerHTML='';
+  for(var i=0;i<total;i++){var d=document.createElement('div');d.className='pd'+(i===cur?' on':'');(function(i){d.onclick=function(){go(i);};})(i);p.appendChild(d);}
+  document.getElementById('snum').textContent=(cur+1)+' / '+total;
+}
+function go(n){if(n<0||n>=total)return;document.getElementById('s'+cur).classList.remove('on');cur=n;document.getElementById('s'+cur).classList.add('on');buildNav();}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' ')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
+buildNav();
+</script>
+</body>
+</html>

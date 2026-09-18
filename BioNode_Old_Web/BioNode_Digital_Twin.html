@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioNode Digital Twin — Unit-01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080D14; --panel:#0F1720; --panel2:#131D28; --line:#22303F;
+  --txt:#E7EEF5; --txt2:#8CA0B3; --txt3:#4C5C6C;
+  --green:#17C98E; --green-dim:#0B4F3A; --green-tint:#0C2620;
+  --amber:#F0A63A; --amber-tint:#2B2110;
+  --blue:#4FA6F0; --blue-tint:#0E2233;
+  --purple:#9C8CFF; --purple-tint:#1C1A33;
+  --red:#F0564F; --red-tint:#2B1414;
+  --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:13px;min-height:100vh}
+
+/* TOP BAR */
+.topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:0 20px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50}
+.logo{font-weight:700;font-size:16px;letter-spacing:-.01em}
+.logo span{color:var(--green)}
+.logo small{color:var(--txt3);font-weight:400;font-size:11px;margin-left:4px}
+.pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;display:flex;align-items:center;gap:6px}
+.pill-green{background:var(--green-tint);color:var(--green)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.spacer{flex:1}
+.clock{font-family:var(--mono);font-size:13px;color:var(--txt2)}
+
+/* LAYOUT */
+.page{padding:20px;max-width:1400px;margin:0 auto}
+.info-strip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;min-height:20px}
+.info-strip .lbl{font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.info-strip .val{font-size:13.5px;color:var(--txt2);line-height:1.5}
+.info-strip .val b{color:var(--txt);font-weight:600}
+
+/* NETWORK MAP */
+.twin-wrap{position:relative;width:100%;aspect-ratio:1000/620;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:16px}
+.twin-wrap svg{position:absolute;inset:0;width:100%;height:100%}
+.flow-path{fill:none;stroke-width:2.5;opacity:.55}
+.flow-path.process{stroke:var(--green);stroke-dasharray:6 5;animation:dash 1.2s linear infinite}
+.flow-path.power{stroke:var(--amber);stroke-dasharray:5 5;animation:dash 1.6s linear infinite}
+.flow-path.control{stroke:var(--purple);stroke-width:1.4;stroke-dasharray:2 4;opacity:.4}
+@keyframes dash{to{stroke-dashoffset:-22}}
+
+.node{position:absolute;transform:translate(-50%,-50%);width:168px;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .2s,transform .15s;user-select:none}
+.node:hover{transform:translate(-50%,-50%) scale(1.03)}
+.node.selected{border-color:var(--green);box-shadow:0 0 0 3px rgba(23,201,142,.12)}
+.node.alert{border-color:var(--red);animation:alertpulse 1s infinite}
+@keyframes alertpulse{0%,100%{border-color:var(--red)}50%{border-color:#5a1a17}}
+.node-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.node-icon{font-size:15px}
+.node-title{font-size:11.5px;font-weight:700;color:var(--txt);line-height:1.2}
+.node-status{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.node-status.warn{background:var(--amber)}
+.node-status.alert{background:var(--red)}
+.node-metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:5px}
+.node-metric .k{font-size:10px;color:var(--txt3)}
+.node-metric .v{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--txt)}
+
+.node.core{width:150px;background:linear-gradient(145deg,#151f2e,#0f1720);border-color:var(--purple);z-index:5}
+.node.core .node-title{color:var(--purple)}
+.node.core .node-icon{color:var(--purple)}
+
+/* mobile stack fallback */
+@media(max-width:760px){
+  .twin-wrap{aspect-ratio:auto;height:auto;padding:16px 0}
+  .twin-wrap svg{display:none}
+  .node{position:relative;left:auto!important;top:auto!important;transform:none!important;width:calc(100% - 32px);margin:0 16px 10px}
+  .node:hover{transform:none!important}
+}
+
+/* BOTTOM GRID: log + controls */
+.bottom-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media(max-width:900px){.bottom-grid{grid-template-columns:1fr}}
+.panel-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.panel-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txt2)}
+.live-tag{margin-left:auto;font-size:10px;color:var(--green);display:flex;align-items:center;gap:5px;font-weight:600}
+
+.log-area{font-family:var(--mono);font-size:11.5px;display:flex;flex-direction:column;gap:4px;min-height:160px;max-height:160px;overflow:hidden}
+.ll{display:flex;gap:7px;align-items:flex-start;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.lt{color:var(--txt3);min-width:46px;flex-shrink:0;font-size:10px;padding-top:1px}
+.ltag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;flex-shrink:0;margin-top:1px;letter-spacing:.03em}
+.tag-gen{background:var(--green-tint);color:var(--green)}
+.tag-proc{background:var(--blue-tint);color:var(--blue)}
+.tag-dist{background:var(--amber-tint);color:var(--amber)}
+.tag-pow{background:var(--amber-tint);color:var(--amber)}
+.tag-ai{background:var(--purple-tint);color:var(--purple)}
+.tag-sys{background:#1a232e;color:var(--txt2)}
+.lm{color:var(--txt);flex:1;line-height:1.4}
+
+.ctrl-group{display:flex;flex-direction:column;gap:10px}
+.ctrl-label{font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font-size:11.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;border:1.5px solid var(--line);background:var(--panel2);color:var(--txt);display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.btn:hover{border-color:var(--txt3)}
+.btn-primary{background:var(--green);border-color:var(--green);color:#04140F}
+.btn-primary:hover{background:#1EE0A0}
+.btn-warn{border-color:var(--amber);color:var(--amber)}
+.btn-warn:hover{background:var(--amber-tint)}
+.btn-danger{border-color:var(--red);color:var(--red)}
+.btn-danger:hover{background:var(--red-tint)}
+
+.revenue-strip{display:flex;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.rev-item{flex:1}
+.rev-item .k{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em}
+.rev-item .v{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--green);margin-top:3px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Bio<span>Node</span><small>DIGITAL TWIN · UNIT-01</small></div>
+  <div class="pill pill-green"><span class="dot"></span>ALL SYSTEMS NOMINAL</div>
+  <div class="spacer"></div>
+  <div class="clock" id="clk">--:--:--</div>
+</div>
+
+<div class="page">
+
+  <div class="info-strip" id="infoStrip">
+    <span class="lbl">SELECTED</span>
+    <span class="val">Click any module below to see what it does and how it connects to the rest of the plant. <b>Green lines</b> = material/gas flow. <b>Amber</b> = power. <b>Purple</b> = AI monitoring &amp; control signal.</span>
+  </div>
+
+  <div class="twin-wrap" id="twinWrap">
+    <svg viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet">
+      <!-- process ring: intake -> digestion -> processing -> compression -> distribution -->
+      <path class="flow-path process" d="M 385,499 Q 270,400 270,300" />
+      <path class="flow-path process" d="M 270,300 Q 270,190 385,121" />
+      <path class="flow-path process" d="M 385,121 Q 500,80 615,121" />
+      <path class="flow-path process" d="M 615,121 Q 730,190 730,300" />
+      <!-- power feeds -->
+      <path class="flow-path power" d="M 615,499 Q 500,460 385,499" />
+      <path class="flow-path power" d="M 615,499 Q 700,400 615,121" />
+      <!-- control spokes from AI core (center) to each node -->
+      <path class="flow-path control" d="M 500,300 L 385,499" />
+      <path class="flow-path control" d="M 500,300 L 270,300" />
+      <path class="flow-path control" d="M 500,300 L 385,121" />
+      <path class="flow-path control" d="M 500,300 L 615,121" />
+      <path class="flow-path control" d="M 500,300 L 730,300" />
+      <path class="flow-path control" d="M 500,300 L 615,499" />
+    </svg>
+
+    <div class="node" id="n-intake" style="left:38.5%;top:80.5%" onclick="selectNode('intake')">
+      <div class="node-hdr"><span class="node-icon">🌿</span><span class="node-title">Feedstock Intake</span><span class="node-status" id="st-intake"></span></div>
+      <div class="node-metric"><span class="k">Hyacinth today</span><span class="v" id="v-feed">42 kg</span></div>
+      <div class="node-metric"><span class="k">Collection rate</span><span class="v" id="v-feedrate">2.1 kg/min</span></div>
+    </div>
+
+    <div class="node" id="n-digest" style="left:27%;top:48.4%" onclick="selectNode('digest')">
+      <div class="node-hdr"><span class="node-icon">🔥</span><span class="node-title">Digestion (Generation)</span><span class="node-status" id="st-digest"></span></div>
+      <div class="node-metric"><span class="k">pH</span><span class="v" id="v-ph">7.24</span></div>
+      <div class="node-metric"><span class="k">Biogas out</span><span class="v" id="v-biogas">0.42 m³/h</span></div>
+    </div>
+
+    <div class="node" id="n-process" style="left:38.5%;top:19.5%" onclick="selectNode('process')">
+      <div class="node-hdr"><span class="node-icon">🧪</span><span class="node-title">Gas Processing</span><span class="node-status" id="st-process"></span></div>
+      <div class="node-metric"><span class="k">CH₄ purity</span><span class="v" id="v-ch4">96.2%</span></div>
+      <div class="node-metric"><span class="k">H₂S level</span><span class="v" id="v-h2s">14 ppm</span></div>
+    </div>
+
+    <div class="node" id="n-compress" style="left:61.5%;top:19.5%" onclick="selectNode('compress')">
+      <div class="node-hdr"><span class="node-icon">⚙️</span><span class="node-title">Compression &amp; Storage</span><span class="node-status" id="st-compress"></span></div>
+      <div class="node-metric"><span class="k">Pressure</span><span class="v" id="v-pres">148 bar</span></div>
+      <div class="node-metric"><span class="k">Cylinders ready</span><span class="v" id="v-cylstock">3</span></div>
+    </div>
+
+    <div class="node" id="n-dist" style="left:73%;top:48.4%" onclick="selectNode('dist')">
+      <div class="node-hdr"><span class="node-icon">⛽</span><span class="node-title">Distribution &amp; Sales</span><span class="node-status" id="st-dist"></span></div>
+      <div class="node-metric"><span class="k">Sold today</span><span class="v" id="v-sold">0 kg</span></div>
+      <div class="node-metric"><span class="k">Revenue</span><span class="v" id="v-rev">৳0</span></div>
+    </div>
+
+    <div class="node" id="n-power" style="left:61.5%;top:80.5%" onclick="selectNode('power')">
+      <div class="node-hdr"><span class="node-icon">☀️</span><span class="node-title">Power (FPV + Battery)</span><span class="node-status" id="st-power"></span></div>
+      <div class="node-metric"><span class="k">Solar input</span><span class="v" id="v-solar">2.8 kW</span></div>
+      <div class="node-metric"><span class="k">Battery</span><span class="v" id="v-batt">87%</span></div>
+    </div>
+
+    <div class="node core" id="n-ai" style="left:50%;top:48.4%" onclick="selectNode('ai')">
+      <div class="node-hdr"><span class="node-icon">🧠</span><span class="node-title">Edge-AI Control Core</span><span class="node-status" id="st-ai"></span></div>
+      <div class="node-metric"><span class="k">Active alerts</span><span class="v" id="v-alerts">0</span></div>
+      <div class="node-metric"><span class="k">Decisions/min</span><span class="v" id="v-decisions">4</span></div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="panel-card">
+      <div class="panel-hdr"><span class="panel-title">System-wide event log</span><div class="live-tag"><span class="dot"></span>LIVE</div></div>
+      <div class="log-area" id="log"></div>
+    </div>
+
+    <div class="panel-card">
+      <div class="ctrl-group">
+        <div>
+          <div class="ctrl-label" style="margin-bottom:8px">Simulation</div>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="btnRun" onclick="toggleSim()"><span id="btnLbl">▶ Start</span></button>
+            <button class="btn" onclick="resetSim()">↺ Reset</button>
+          </div>
+        </div>
+        <div>
+          <div class="ctrl-label" style="margin:10px 0 8px">Inject a fault — watch it cascade across modules</div>
+          <div class="btn-row">
+            <button class="btn btn-warn" onclick="inject('ph')">pH fault (Digestion)</button>
+            <button class="btn btn-danger" onclick="inject('power')">Power dip (FPV)</button>
+            <button class="btn btn-warn" onclick="inject('demand')">Demand spike (Sales)</button>
+          </div>
+        </div>
+      </div>
+      <div class="revenue-strip">
+        <div class="rev-item"><div class="k">Total revenue</div><div class="v" id="v-totrev">৳0</div></div>
+        <div class="rev-item"><div class="k">BioCNG produced</div><div class="v" id="v-totgas">0.0 kg</div></div>
+        <div class="rev-item"><div class="k">CO₂ offset</div><div class="v" id="v-co2">0.0 kg</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var running=false, tick=0, ivl=null;
+var fault=null, faultTick=0;
+var totalRevenue=0, totalGas=0, cylStock=3, batteryPct=87;
+
+var NODE_INFO = {
+  intake:  {title:"Feedstock Intake", desc:"Water hyacinth is harvested daily from the adjacent canal at zero cost. This is the only input the plant depends on — no imported or purchased feedstock."},
+  digest:  {title:"Digestion — the generation stage", desc:"Bacterial cultures break down the hyacinth at 35–38°C, generating raw biogas. This is where energy is actually created — everything downstream just purifies and moves it."},
+  process: {title:"Gas Processing", desc:"Raw biogas is cleaned in two steps: an iron sponge filter removes H₂S, then a membrane strips CO₂ — raising methane purity above the 95% vehicle-fuel threshold."},
+  compress:{title:"Compression & Storage", desc:"Purified gas is compressed in stages up to 200 bar and filled into standard cylinders, which are held here until they're moved to the dispensing point."},
+  dist:    {title:"Distribution & Sales", desc:"This is where energy leaves the plant and becomes revenue — cylinders are dispensed to CNG drivers at the terminal at roughly 20% below the imported market rate."},
+  power:   {title:"Power System — FPV array + battery", desc:"A floating solar array on the canal charges a battery buffer that keeps the Edge-AI and compressor running independently of the grid, including during load-shedding."},
+  ai:      {title:"Edge-AI Control Core", desc:"Reads every module's sensors continuously and issues correction commands — this is the layer that replaces a human operator and ties all five physical modules into one system."}
+};
+
+function selectNode(id){
+  document.querySelectorAll('.node').forEach(function(n){n.classList.remove('selected');});
+  document.getElementById('n-'+id).classList.add('selected');
+  var info = NODE_INFO[id];
+  document.getElementById('infoStrip').innerHTML =
+    '<span class="lbl">'+info.title.toUpperCase()+'</span><span class="val">'+info.desc+'</span>';
+}
+
+function r(a,b,d){return parseFloat((a+Math.random()*(b-a)).toFixed(d===undefined?2:d));}
+function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+function getT(){return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+
+var LOGS = [
+  {t:'gen', m:'Digestion: pH 7.24 nominal, biogas output stable at 0.42 m³/hr.'},
+  {t:'proc',m:'Processing: CH₄ purity 96.2%, H₂S scrubber at 99.2% removal efficiency.'},
+  {t:'dist',m:'Distribution: pump idle, awaiting next vehicle at dispensing bay.'},
+  {t:'pow', m:'Power: FPV array delivering 2.8 kW, battery buffer holding at 87%.'},
+  {t:'ai',  m:'AI Core: all 7 modules reporting nominal. No corrective action needed.'},
+  {t:'gen', m:'Feed pump P-01 cycled. Hyacinth batch loaded into digester.'},
+  {t:'proc',m:'CO₂ membrane differential pressure nominal at 1.8 bar.'},
+  {t:'sys', m:'Cylinder CYL-04 reached 200 bar — moved to storage queue.'},
+];
+
+function addLog(e){
+  var c=document.getElementById('log');
+  var d=document.createElement('div');d.className='ll';
+  d.innerHTML='<span class="lt">'+getT()+'</span><span class="ltag tag-'+e.t+'">'+e.t.toUpperCase()+'</span><span class="lm">'+e.m+'</span>';
+  c.appendChild(d);
+  var ls=c.querySelectorAll('.ll');if(ls.length>7)ls[0].remove();
+}
+
+function setStatus(id, state){
+  var el = document.getElementById('st-'+id);
+  if(!el) return;
+  el.className = 'node-status' + (state?(' '+state):'');
+  var node = document.getElementById('n-'+id);
+  if(node) node.classList.toggle('alert', state==='alert');
+}
+
+function step(){
+  tick++;
+
+  // ── Digestion (generation) ──
+  var ph = 7.2, biogas = 0.42;
+  if(fault==='ph'){
+    faultTick++;
+    ph = clamp(6.3 + faultTick*0.08, 6.3, 7.1);
+    biogas = clamp(0.42 - (7.2-ph)*0.15, 0.20, 0.42);
+    setStatus('digest', ph<6.8?'warn':'');
+    if(faultTick===1) addLog({t:'gen',m:'ALERT — pH dropping in digester: 7.24 → 6.31. Acidification risk.'});
+    if(faultTick===4) addLog({t:'ai', m:'AI Core: alkaline buffer injected via V-08. Compensating.'});
+    if(faultTick===4) addLog({t:'proc',m:'Processing: reduced gas throughput detected downstream — expected, not a fault.'});
+    if(faultTick===10){addLog({t:'gen',m:'pH restored to 7.02. Digestion fault resolved.'}); fault=null; faultTick=0; setStatus('digest','');}
+  } else {
+    ph = r(6.95,7.38,2);
+  }
+  document.getElementById('v-ph').textContent = ph.toFixed(2);
+  document.getElementById('v-biogas').textContent = biogas.toFixed(2)+' m³/h';
+  document.getElementById('v-feed').textContent = (40+Math.round(tick*0.22))+' kg';
+  document.getElementById('v-feedrate').textContent = r(1.8,2.4,1)+' kg/min';
+
+  // ── Gas Processing ──
+  var ch4 = fault==='ph' ? r(93.5,95.5,1) : r(95.2,97.1,1);
+  var h2s = r(8,22,0);
+  document.getElementById('v-ch4').textContent = ch4+'%';
+  document.getElementById('v-h2s').textContent = Math.round(h2s)+' ppm';
+  setStatus('process', ch4<95?'warn':'');
+
+  // ── Compression & Storage ──
+  var pres = clamp(148 + tick*0.5 + r(-1,1), 0, 200);
+  document.getElementById('v-pres').textContent = Math.round(pres)+' bar';
+  if(pres>=199 && tick%14===0 && cylStock<8){
+    cylStock++;
+    addLog({t:'sys',m:'New cylinder filled to 200 bar. Storage: '+cylStock+' ready.'});
+  }
+  document.getElementById('v-cylstock').textContent = cylStock;
+
+  // ── Power ──
+  var powerFaultActive = fault==='power';
+  var solar = powerFaultActive ? clamp(2.8-faultTick*0.3,0.2,2.8) : r(2.4,3.2,1);
+  if(powerFaultActive){
+    faultTick++;
+    batteryPct = clamp(batteryPct-0.6, 20, 100);
+    setStatus('power','warn');
+    if(faultTick===1) addLog({t:'pow',m:'ALERT — cloud cover detected. Solar input dropping: 2.8 → 0.4 kW.'});
+    if(faultTick===3) addLog({t:'ai', m:'AI Core: switching compressor load to battery buffer. Digestion unaffected.'});
+    if(faultTick===10){addLog({t:'pow',m:'Solar input recovered. Battery holding steady.'}); fault=null; faultTick=0; setStatus('power','');}
+  } else {
+    batteryPct = clamp(batteryPct+0.05,0,100);
+  }
+  document.getElementById('v-solar').textContent = solar+' kW';
+  document.getElementById('v-batt').textContent = Math.round(batteryPct)+'%';
+
+  // ── Distribution & Sales ──
+  var demandFaultActive = fault==='demand';
+  var saleChance = demandFaultActive ? 0.55 : 0.18;
+  if(cylStock>0 && Math.random()<saleChance){
+    cylStock--;
+    var kg = r(4,6,1);
+    var price = 62; // BDT/kg, ~20% below market
+    var rev = Math.round(kg*price);
+    totalRevenue += rev;
+    totalGas += kg;
+    document.getElementById('v-sold').textContent = kg+' kg';
+    document.getElementById('v-rev').textContent = '৳'+rev;
+    addLog({t:'dist',m:'Sale completed: '+kg+' kg dispensed for ৳'+rev+'. Cylinder stock: '+cylStock+'.'});
+  }
+  if(demandFaultActive){
+    faultTick++;
+    setStatus('dist','warn');
+    if(faultTick===1) addLog({t:'dist',m:'Demand spike detected — queue forming at dispensing bay.'});
+    if(faultTick===8){addLog({t:'ai',m:'AI Core: prioritising compression cycle to refill stock faster.'}); }
+    if(faultTick===16){fault=null;faultTick=0;setStatus('dist','');addLog({t:'dist',m:'Demand normalised. Queue cleared.'});}
+  }
+  document.getElementById('v-totrev').textContent = '৳'+totalRevenue.toLocaleString();
+  document.getElementById('v-totgas').textContent = totalGas.toFixed(1)+' kg';
+  document.getElementById('v-co2').textContent = (totalGas*2.15).toFixed(1)+' kg';
+
+  // ── AI Core ──
+  var activeAlerts = (fault ? 1 : 0);
+  document.getElementById('v-alerts').textContent = activeAlerts;
+  document.getElementById('v-decisions').textContent = fault ? 9 : 4;
+  setStatus('ai', activeAlerts>0 ? 'warn' : '');
+
+  // background log
+  if(tick%5===0 && !fault) addLog(LOGS[tick%LOGS.length]);
+}
+
+function toggleSim(){
+  running=!running;
+  var lbl=document.getElementById('btnLbl');
+  if(running){
+    lbl.textContent='⏸ Pause';
+    addLog({t:'sys',m:'Digital twin simulation started. All 7 modules online.'});
+    ivl=setInterval(step,1000);
+  } else {
+    lbl.textContent='▶ Resume';
+    clearInterval(ivl);
+  }
+}
+
+function inject(type){
+  if(!running) toggleSim();
+  fault=type; faultTick=0;
+}
+
+function resetSim(){
+  clearInterval(ivl); running=false; tick=0; fault=null; faultTick=0;
+  totalRevenue=0; totalGas=0; cylStock=3; batteryPct=87;
+  document.getElementById('btnLbl').textContent='▶ Start';
+  document.getElementById('log').innerHTML='';
+  ['intake','digest','process','compress','dist','power','ai'].forEach(function(id){setStatus(id,'');});
+  document.getElementById('v-totrev').textContent='৳0';
+  document.getElementById('v-totgas').textContent='0.0 kg';
+  document.getElementById('v-co2').textContent='0.0 kg';
+  document.getElementById('v-sold').textContent='0 kg';
+  document.getElementById('v-rev').textContent='৳0';
+  document.getElementById('v-cylstock').textContent='3';
+  addLog({t:'sys',m:'System reset. Ready to start.'});
+}
+
+setInterval(function(){
+  document.getElementById('clk').textContent = getT();
+},1000);
+
+window.addEventListener('load', function(){
+  addLog({t:'sys',m:'BioNode Digital Twin loaded. 7 modules mapped: Intake, Digestion, Processing, Compression, Distribution, Power, AI Core.'});
+  addLog({t:'ai', m:'Edge-AI Core online — monitoring all connected modules.'});
+});
+</script>
+</body>
+</html>
